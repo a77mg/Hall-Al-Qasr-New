@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "235243108657",
+    "project_id": "hall-al-qasr",
+    "storage_bucket": "hall-al-qasr.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:235243108657:android:f78eb157cd57c7d5049810",
+        "android_client_info": {
+          "package_name": "com.alqasrhall.booking"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWN70g7UyQB0mCGMtQWlYrhWufsZMOdkU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,100 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+    
+    function isActive() {
+      let doc = getUserData();
+      return doc != null && doc.data.status == 'ACTIVE';
+    }
+    
+    function getUserRole() {
+      let doc = getUserData();
+      return doc != null ? doc.data.role : 'None';
+    }
+    
+    function isAdmin() {
+      return isSignedIn() && isActive() && getUserRole() == 'Admin';
+    }
+    function isManager() {
+      return isSignedIn() && isActive() && getUserRole() == 'Manager';
+    }
+    function isAccountant() {
+      return isSignedIn() && isActive() && getUserRole() == 'Accountant';
+    }
+    function isReceptionist() {
+      return isSignedIn() && isActive() && getUserRole() == 'Receptionist';
+    }
+    
+    function getFinancialClosureDate() {
+      return get(/databases/$(database)/documents/settings/financial).data.closingDate;
+    }
+    
+    function isAfterClosure(dateStr) {
+      return dateStr >= getFinancialClosureDate();
+    }
+
+    match /bookings/{bookingId} {
+      allow read: if isActive();
+
+      allow create: if isActive() && (isAdmin() || isManager() || isReceptionist())
+        && bookingId == (request.resource.data.date + '_' + request.resource.data.shift)
+        && request.resource.data.eventType in ['عرس رجال مقيل وزفة', 'عرس رجال سمرة', 'عرس نساء كراسي وطاولات', 'عرس نساء مجالس', 'عزاء', 'أخرى']
+        && (request.resource.data.eventType != 'أخرى' || (request.resource.data.notes != null && request.resource.data.notes != ''));
+
+      allow update: if isActive() && (
+        isAdmin() ||
+        ( (isManager() || isReceptionist()) && isAfterClosure(resource.data.date) )
+      )
+      && (request.resource.data.eventType == null || request.resource.data.eventType in ['عرس رجال مقيل وزفة', 'عرس رجال سمرة', 'عرس نساء كراسي وطاولات', 'عرس نساء مجالس', 'عزاء', 'أخرى'])
+      && (request.resource.data.eventType != 'أخرى' || (request.resource.data.notes != null && request.resource.data.notes != ''));
+
+      allow delete: if isAdmin();
+    }
+
+    match /payments/{paymentId} {
+      allow read: if isActive();
+      
+      allow create: if isActive() && (isAdmin() || isManager() || isAccountant())
+        && (isAdmin() || isAfterClosure(request.resource.data.date));
+        
+      allow update: if isActive() && (isAdmin() || isManager() || isAccountant())
+        && (isAdmin() || isAfterClosure(resource.data.date));
+        
+      allow delete: if isAdmin();
+    }
+    
+    match /customers/{customerId} {
+      allow read, write: if isActive() && (isAdmin() || isManager() || isReceptionist() || isAccountant());
+    }
+    
+    match /settings/{docId} {
+      allow read: if isActive();
+      allow write: if isAdmin();
+    }
+    
+    match /auditLogs/{logId} {
+      allow create: if isActive() && (isAdmin() || isManager() || isReceptionist() || isAccountant());
+      allow read: if isAdmin() || isManager();
+    }
+    
+    match /users/{userId} {
+      // يسمح للمستخدم بقراءة مستنده الخاص (لإتمام الدخول) أو للأدمن بقراءة الجميع
+      allow read: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+      
+      // منع التعديل والإضافة إلا للأدمن، مع فرض التحقق من التوكن إن أمكن
+      // دمجنا التوكن مع القراءة من قاعدة البيانات لضمان أعلى موثوقية
+      allow create: if isAdmin() || (isSignedIn() && request.auth.token.role == 'Admin');
+      allow update: if isSignedIn() && request.auth.token.role == 'Admin';
+      allow delete: if isSignedIn() && request.auth.token.role == 'Admin';
+    }
+  }
+}
