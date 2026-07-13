@@ -47,7 +47,7 @@ moshiKotlinCodegen = "1.15.2"
 datastorePreferences = "1.1.2"
 
 robolectric = "4.14.1"
-roborazzi = "1.42.0"
+roborazzi = "1.39.0"
 
 firebaseBom = "33.10.0"
 
@@ -57,7 +57,7 @@ googleServices = "4.4.2"
 credentials = "1.5.0"
 googleid = "1.1.1"
 
-hilt = "2.52"
+hilt = "2.56.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -124,3 +124,8 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "googleDevtoolsKsp" }
+
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
+secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secretsGradlePlugin" }
+roborazzi = { id = "io.github.takahirom.roborazzi", version.ref = "roborazzi" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
