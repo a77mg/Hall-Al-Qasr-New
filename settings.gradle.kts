@@ -1,14 +1,6 @@
 pluginManagement {
     repositories {
-        google {
-            content {
-                includeGroupByRegex("com\\.android.*")
-                includeGroupByRegex("com\\.google.*")
-                includeGroupByRegex("androidx.*")
-                // إضافة هذا السطر يحل مشكلة تحميل KSP
-                includeGroup("com.google.devtools.ksp") 
-            }
-        }
+        google()
         mavenCentral()
         gradlePluginPortal()
     }
