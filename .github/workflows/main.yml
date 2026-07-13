@@ -21,14 +21,11 @@ jobs:
       run: chmod +x gradlew
 
     - name: Set up Android SDK and build-tools
-      uses: r0adkll/setup-android@v2
+      uses: android-actions/setup-android@v4
       with:
-        api-level: 33
-        build-tools: 33.0.2
-        components: |
+        # install the components you need
+        packages: |
           platform-tools
-          platform-tools
-          tools
           build-tools;33.0.2
           platforms;android-33
 
