@@ -1,15 +1,15 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.google.devtools.ksp)
-    // نداء مباشر بدون alias لتجاوز مشكلة الـ Plugin not found
-    id("org.jetbrains.kotlin.plugin.serialization") version "2.2.10" 
-    alias(libs.plugins.roborazzi)
-    alias(libs.plugins.secrets)
-    alias(libs.plugins.google.services)
-    alias(libs.plugins.hilt)
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.compose")
+    id("com.google.devtools.ksp")
+    id("org.jetbrains.kotlin.plugin.serialization")
+    id("io.github.takahirom.roborazzi")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    id("com.google.gms.google-services")
+    id("com.google.dagger.hilt.android")
 }
+
 
 
 android {
