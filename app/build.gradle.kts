@@ -1,39 +1,16 @@
-plugins {
-  alias(libs.plugins.android.application)
-  alias(libs.plugins.kotlin.compose)
-  alias(libs.plugins.google.devtools.ksp)
-  alias(libs.plugins.kotlin.serialization)
-  alias(libs.plugins.roborazzi)
-  alias(libs.plugins.secrets)
-  alias(libs.plugins.google.services)
-}
-
-android {
-  namespace = "com.alqasrhall.booking" // تم تحديثه ليتطابق مع حزمة تطبيقك
-  compileSdk = 35 // تم تعديله للنسخة القياسية المستقرة
-
-  defaultConfig {
-    applicationId = "com.alqasrhall.booking"
-    minSdk = 26
-    targetSdk = 35
-    versionCode = 1
-    versionName = "1.0"
-
-    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-  }
-
   signingConfigs {
-    create("release") {
-      // هذه القيم ستأتي من GitHub Secrets التي ستضيفها لاحقاً
-      storeFile = file("my-upload-key.jks") 
-      storePassword = System.getenv("STORE_PASSWORD")
-      keyAlias = "upload"
-      keyPassword = System.getenv("KEY_PASSWORD")
-    }
+    // سنعتمد على التوقيع التلقائي ولا نحتاج لإعدادات معقدة
   }
 
   buildTypes {
     release {
+      isCrunchPngs = false
+      isMinifyEnabled = false
+      proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+      // هنا السر: سنستخدم التوقيع الافتراضي (Debug) للنسخة الحالية لتجاوز المشكلة
+      signingConfig = signingConfigs.getByName("debug") 
+    }
+  }
       isCrunchPngs = false
       isMinifyEnabled = false // اجعلها true فقط عند اختبار النسخة النهائية
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
