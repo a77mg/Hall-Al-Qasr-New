@@ -17,11 +17,6 @@ jobs:
         distribution: 'temurin'
         cache: gradle
 
-    - name: Create google-services.json
-      env:
-        DATA: ${{ secrets.GOOGLE_SERVICES_JSON }}
-      run: echo $DATA > app/google-services.json
-
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
@@ -32,4 +27,5 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: app-release
-        path: app/build/outputs/apk/release/app-release-unsigned.apk
+        path: app/build/outputs/apk/release/app-release-debug.apk 
+        # ملاحظة: الملف الآن سينتج باسم ...-debug.apk لأننا استخدمنا توقيع الـ debug
